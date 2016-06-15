@@ -1,5 +1,9 @@
 angular.module('aam',['ngRoute'])
-	.config(function routes($routeProvider, $locationProvider)
+	.config(routes)
+	//.factory('finalFactory',factoria);
+	.factory('finalFactory',factoria);
+
+function routes($routeProvider, $locationProvider)
 {
 	$locationProvider.html5Mode(
 		{
@@ -10,6 +14,8 @@ angular.module('aam',['ngRoute'])
 	$routeProvider
 		.when('/app_angular/',
 		{
+			controller: appCtrl,
+			controllerAs: "vm",
 			templateUrl:'html/main.html'
 		})	
 		.when('/app_angular/borrar',
@@ -26,10 +32,34 @@ angular.module('aam',['ngRoute'])
 		})	
 		.when('/app_angular/crear',
 		{
+			controller: appCtrl,
+			controllerAs: "vm",			
 			templateUrl:'html/crear.html'
 		})			
+}
 
-		
-});
 
-	
+function appCtrl(finalFactory)
+{
+	var vm=this;
+	vm.colores = finalFactory.colores;
+	vm.nuevoColor = function()
+	{
+		finalFactory.nuevoColor(vm.color)
+	};
+}
+
+function factoria()
+{
+	var colores = ["green","blue","orange"];
+
+	var interfaz = {
+		colores: colores,
+		nuevoColor: function(color)
+		{
+			colores.push(color);
+		}
+	};
+
+	return interfaz;
+}
